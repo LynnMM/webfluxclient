@@ -5,6 +5,7 @@ import org.lynn.springboot2.webfluxclient.bean.ServerInfo;
 import org.lynn.springboot2.webfluxclient.interfaces.RestHandler;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 public class WebClientRestHandler implements RestHandler {
 
   private WebClient client;
+  private RequestBodySpec request;
 
   /**
    * 初始化webclient
@@ -34,21 +36,29 @@ public class WebClientRestHandler implements RestHandler {
     // 返回结果
     Object result = null;
 
-    ResponseSpec request = this.client
+    request = this.client
         // 请求方法
         .method(methodInfo.getMethod())
         // 请求url
         .uri(methodInfo.getUrl(), methodInfo.getParams())
-        .accept(MediaType.APPLICATION_JSON)
-        // 发出请求
-        .retrieve();
+        .accept(MediaType.APPLICATION_JSON);
+
+    ResponseSpec retrieve = null;
+    // 判断是否带了body
+    if (methodInfo.getBody() != null){
+      // 发出请求
+      retrieve = request.body(methodInfo.getBody(), methodInfo.getBodyElementType()).retrieve();
+    }else{
+      // 发出请求
+      retrieve = request.retrieve();
+    }
 
     // 处理body
     if (methodInfo.isReturnFlux()) {
-      result = request.bodyToFlux(methodInfo.getReturnElementType());
+      result = retrieve.bodyToFlux(methodInfo.getReturnElementType());
     }
     else {
-      result = request.bodyToMono(methodInfo.getReturnElementType());
+      result = retrieve.bodyToMono(methodInfo.getReturnElementType());
     }
 
     return result;

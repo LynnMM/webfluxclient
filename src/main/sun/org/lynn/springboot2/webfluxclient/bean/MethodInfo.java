@@ -27,10 +27,16 @@ public class MethodInfo {
    */
   private Map<String, Object> params;
 
+
   /**
-   * 请求Body
+   * 请求body
    */
-  private Mono<?> body;
+  private Mono body;
+
+  /**
+   * 请求Body的类型
+   */
+  private Class<?> bodyElementType;
 
   /**
    * 返回flux还是mono
@@ -75,11 +81,11 @@ public class MethodInfo {
     this.params = params;
   }
 
-  public Mono<?> getBody() {
+  public Mono getBody() {
     return body;
   }
 
-  public void setBody(Mono<?> body) {
+  public void setBody(Mono body) {
     this.body = body;
   }
 
@@ -99,13 +105,24 @@ public class MethodInfo {
     this.returnElementType = returnElementType;
   }
 
+  public Class<?> getBodyElementType() {
+    return bodyElementType;
+  }
+
+  public void setBodyElementType(Class<?> bodyElementType) {
+    this.bodyElementType = bodyElementType;
+  }
+
   @Override
   public String toString() {
     return "MethodInfo{" +
         "url='" + url + '\'' +
         ", method=" + method +
         ", params=" + params +
+        ", bodyElementType=" + bodyElementType +
         ", body=" + body +
+        ", returnFlux=" + returnFlux +
+        ", returnElementType=" + returnElementType +
         '}';
   }
 }

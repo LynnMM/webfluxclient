@@ -28,5 +28,8 @@ public class TestController {
 //    // 直接调用 实现调用rest接口的效果
     Flux<User> users = userApi.getAllUser();
     users.subscribe(System.out::println);
+
+    // 创建用户
+    userApi.createUser(Mono.just(new User("xfq", 33))).subscribe(System.out::println);
   }
 }

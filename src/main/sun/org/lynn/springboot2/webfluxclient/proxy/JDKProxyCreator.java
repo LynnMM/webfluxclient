@@ -135,6 +135,8 @@ public class JDKProxyCreator implements ProxyCreator{
 
       if (annoBody != null){
         methodInfo.setBody((Mono<?>) args[i]);
+        // 请求对象的实际类型
+        methodInfo.setBodyElementType(extractElementType(parameters[i].getParameterizedType()));
       }
     }
   }
