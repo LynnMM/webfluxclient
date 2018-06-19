@@ -4,7 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.lynn.springboot2.webfluxclient.ApiServer;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -72,7 +75,38 @@ public class JDKProxyCreator implements ProxyCreator{
 
     extractRequestParamAndBody(method, args, methodInfo);
 
+    extractReturnInfo(method, methodInfo);
+
     return methodInfo;
+  }
+
+  /**
+   * 提取返回对象信息
+   *
+   * @param method
+   * @param methodInfo
+   */
+  private void extractReturnInfo(Method method, MethodInfo methodInfo) {
+    // 返回flux还是mono
+    // isAssignableFrom 判断类型是否某个的子类
+    // instance of 判断实例是否某个的子类
+    boolean isFlux = method.getReturnType().isAssignableFrom(Flux.class);
+    methodInfo.setReturnFlux(isFlux);
+
+    Class<?> elementType = extractElementType(method.getGenericReturnType());
+    methodInfo.setReturnElementType(elementType);
+  }
+
+  /**
+   * 得到泛型类型的实际类型
+   *
+   * @param genericReturnType
+   * @return
+   */
+  private Class<?> extractElementType(Type genericReturnType) {
+    Type[] actualTypeArguments = ((ParameterizedType)genericReturnType).getActualTypeArguments();
+
+    return (Class<?>) actualTypeArguments[0];
   }
 
   /**

@@ -20,13 +20,13 @@ public class TestController {
   public void test(){
     // 测试信息提取
     // 不订阅，不会实际发出请求，但会进入我们的代理类
-    userApi.getAllUser();
-    userApi.getUserById("11111111");
-    userApi.deleteUserById("11111111");
-    userApi.createUser(Mono.just(new User("xfq", 33)));
+//    userApi.getAllUser();
+//    userApi.getUserById("11111111");
+//    userApi.deleteUserById("11111111");
+//    userApi.createUser(Mono.just(new User("xfq", 33)));
 
 //    // 直接调用 实现调用rest接口的效果
-//    Flux<User> users = userApi.getAllUser();
-//    users.subscribe(System.out::println);
+    Flux<User> users = userApi.getAllUser();
+    users.subscribe(System.out::println);
   }
 }

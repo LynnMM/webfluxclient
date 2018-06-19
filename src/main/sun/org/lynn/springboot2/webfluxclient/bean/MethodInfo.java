@@ -32,6 +32,16 @@ public class MethodInfo {
    */
   private Mono<?> body;
 
+  /**
+   * 返回flux还是mono
+   */
+  private boolean returnFlux;
+
+  /**
+   * 返回对象的类型
+   */
+  private Class<?> returnElementType;
+
   public MethodInfo(){ };
 
   public MethodInfo(String url, HttpMethod method, Map<String, Object> params, Mono<?> body) {
@@ -71,6 +81,22 @@ public class MethodInfo {
 
   public void setBody(Mono<?> body) {
     this.body = body;
+  }
+
+  public boolean isReturnFlux() {
+    return returnFlux;
+  }
+
+  public void setReturnFlux(boolean returnFlux) {
+    this.returnFlux = returnFlux;
+  }
+
+  public Class<?> getReturnElementType() {
+    return returnElementType;
+  }
+
+  public void setReturnElementType(Class<?> returnElementType) {
+    this.returnElementType = returnElementType;
   }
 
   @Override
