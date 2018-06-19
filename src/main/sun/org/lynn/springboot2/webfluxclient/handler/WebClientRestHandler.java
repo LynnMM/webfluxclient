@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.RequestBodySpec;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
+import reactor.core.publisher.Mono;
 
 /**
  * @author tangxinyi@Ctrip.com
@@ -52,6 +53,9 @@ public class WebClientRestHandler implements RestHandler {
       // 发出请求
       retrieve = request.retrieve();
     }
+
+    // 处理异常
+    retrieve.onStatus(httpStatus -> httpStatus.value() == 404, clientResponse -> Mono.just(new RuntimeException("Not Found")));
 
     // 处理body
     if (methodInfo.isReturnFlux()) {

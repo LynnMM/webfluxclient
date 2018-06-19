@@ -26,10 +26,17 @@ public class TestController {
 //    userApi.createUser(Mono.just(new User("xfq", 33)));
 
 //    // 直接调用 实现调用rest接口的效果
-    Flux<User> users = userApi.getAllUser();
-    users.subscribe(System.out::println);
+//    Flux<User> users = userApi.getAllUser();
+//    users.subscribe(System.out::println);
 
-    // 创建用户
-    userApi.createUser(Mono.just(new User("xfq", 33))).subscribe(System.out::println);
+//    // 创建用户
+//    userApi.createUser(Mono.just(new User("xfq", 33))).subscribe(System.out::println);
+
+    String id = "58928rjhfw9eu43409";
+    userApi.getUserById(id).subscribe(user -> {
+      System.out.println("getUserById:" + user);
+    }, e ->{
+      System.err.println("找不到用户:" + e.getMessage());
+    });
   }
 }
